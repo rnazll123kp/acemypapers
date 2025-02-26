@@ -1,9 +1,11 @@
 
-import { FileText, Brain, Calendar, Settings, Upload, Menu, X } from "lucide-react";
-import { Link } from "react-router-dom";
+import { FileText, Brain, Calendar, Settings, Upload, Menu, X, LogOut } from "lucide-react";
+import { Link, useNavigate } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
+import { supabase } from "@/integrations/supabase/client";
+import { useToast } from "@/components/ui/use-toast";
 
 interface SidebarLinkProps {
   href: string;
@@ -32,12 +34,30 @@ const SidebarLink = ({ href, icon: Icon, children, active, onClick }: SidebarLin
 
 export const Sidebar = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const navigate = useNavigate();
+  const { toast } = useToast();
+
+  const handleSignOut = async () => {
+    try {
+      await supabase.auth.signOut();
+      toast({
+        title: "Signed out successfully",
+        description: "Come back soon!",
+      });
+      navigate("/auth");
+    } catch (error: any) {
+      toast({
+        variant: "destructive",
+        title: "Error signing out",
+        description: error.message,
+      });
+    }
+  };
 
   const toggleSidebar = () => setIsOpen(!isOpen);
 
   return (
     <>
-      {/* Mobile Menu Button */}
       <Button
         variant="ghost"
         size="icon"
@@ -47,7 +67,6 @@ export const Sidebar = () => {
         {isOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
       </Button>
 
-      {/* Sidebar */}
       <div className={cn(
         "fixed inset-0 z-40 transform transition-transform duration-200 ease-in-out md:translate-x-0 md:static",
         isOpen ? "translate-x-0" : "-translate-x-full"
@@ -73,15 +92,14 @@ export const Sidebar = () => {
             </SidebarLink>
           </nav>
           <div className="mt-auto space-y-2">
-            <Button className="w-full">
-              <FileText className="mr-2 h-4 w-4" />
-              Upgrade to Premium
+            <Button className="w-full gap-2" onClick={handleSignOut}>
+              <LogOut className="h-4 w-4" />
+              Sign Out
             </Button>
           </div>
         </div>
       </div>
 
-      {/* Overlay */}
       {isOpen && (
         <div 
           className="fixed inset-0 bg-background/80 backdrop-blur-sm z-30 md:hidden"
