@@ -32,26 +32,12 @@ export const Features = () => {
   ];
 
   return (
-    <div className="py-24" style={{ 
-      background: "repeating-linear-gradient(45deg, #ff0000, #ff0000 10px, #ffff00 10px, #ffff00 20px)",
-      border: "15px ridge #00ffff"
-    }}>
-      <div className="container" style={{ maxWidth: "95%" }}>
-        <h2 className="text-4xl font-bold text-center mb-12 blink-text zigzag-border" style={{ 
-          color: "#0000ff", 
-          textShadow: "3px 3px 0 #ff00ff",
-          marginBottom: "50px",
-          padding: "20px",
-          background: "#00ff00",
-          fontFamily: "Impact, fantasy"
-        }}>
-          ⭐⭐⭐ KEY FEATURES ⭐⭐⭐
-        </h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10" style={{
-          padding: "0 20px"
-        }}>
-          {features.map((feature, index) => (
-            <Feature key={index} {...feature} />
+    <div className="py-24 bg-gradient-to-b from-background to-background/50">
+      <div className="container">
+        <h2 className="text-3xl font-bold text-center mb-12">Key Features</h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {features.map((feature) => (
+            <Feature key={feature.title} {...feature} />
           ))}
         </div>
       </div>
